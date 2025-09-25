@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>808 Drum Machine & Synth</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.36/Tone.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #222; color: white; }
+        .container { margin: 20px auto; width: 80%; max-width: 900px; background: #333; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(255,255,255,0.2); }
+        .keyboard, .drum-pads { display: flex; justify-content: center; margin-top: 20px; }
+        .key, .pad { width: 60px; height: 150px; margin: 5px; background: orange; color: black; border: 2px solid black; text-align: center; line-height: 150px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .selected { background: yellow !important; }
+        .pad { background: red; height: 100px; width: 100px; line-height: 100px; }
+    </style>
+</head>
+<body>
+    <h1>808 Drum Machine & Synth</h1>
+    <div class="container">
+        <h2>Synth Selector</h2>
+        <select id="synthType">
+            <option value="default">Default</option>
+            <option value="spacey">Spacey</option>
+            <option value="retro">Retro</option>
+            <option value="psychedelic">Psychedelic</option>
+        </select>
+    </div>
+    <div class="container">
+        <h2>Synth</h2>
+        <div class="keyboard" id="keyboard"></div>
+        <button onclick="toggleArpeggiator()" id="arpeggiatorButton">Start Arpeggiator</button>
+    </div>
+    <div class="container">
+        <h2>Drum Machine</h2>
+        <div class="drum-pads">
+            <div class="pad" onclick="playDrum('kick')">Kick</div>
+            <div class="pad" onclick="playDrum('snare')">Snare</div>
+            <div class="pad" onclick="playDrum('hihat')">Hi-Hat</div>
+        </div>
+    </div>
+
+    <script>
+        let selectedNotes = [];
+        let arpeggiatorPlaying = false;
+        let arpLoop;
+        
+        const synths = {
+            default: new Tone.PolySynth(Tone.Synth).toDestination(),
+            spacey: new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sine" }, envelope: { attack: 0.5, release: 2 } }).toDestination(),
+            retro: new Tone.PolySynth(Tone.Synth, { oscillator: { type: "square" }, envelope: { attack: 0.01, decay: 0.3, sustain: 0.4, release: 0.1 } }).toDestination(),
+            psychedelic: new Tone.PolySynth(Tone.Synth, { oscillator: { type: "triangle" }, modulation: { type: "sine" } }).toDestination()
+        };
+        
+        let currentSynth = synths.default;
+
+        document.getElementById("synthType").addEventListener("change", (event) => {
+            currentSynth = synths[event.target.value];
+        });
+
+        function createKeyboard() {
+            const keyboard = document.getElementById("keyboard");
+            const notes = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"];
+            
+            notes.forEach(note => {
+                const key = document.createElement("div");
+                key.className = "key";
+                key.innerText = note;
+                key.onclick = () => selectNoteForArpeggiator(note, key);
+                keyboard.appendChild(key);
+            });
+        }
+
+        function selectNoteForArpeggiator(note, keyElement) {
+            if (selectedNotes.includes(note)) {
+                selectedNotes = selectedNotes.filter(n => n !== note);
+                keyElement.classList.remove("selected");
+            } else {
+                selectedNotes.push(note);
+                keyElement.classList.add("selected");
+            }
+        }
+
+        function toggleArpeggiator() {
+            arpeggiatorPlaying = !arpeggiatorPlaying;
+            document.getElementById("arpeggiatorButton").innerText = arpeggiatorPlaying ? "Stop Arpeggiator" : "Start Arpeggiator";
+            if (arpeggiatorPlaying && selectedNotes.length > 0) {
+                let index = 0;
+                arpLoop = new Tone.Loop(time => {
+                    currentSynth.triggerAttackRelease(selectedNotes[index], "8n", time);
+                    index = (index + 1) % selectedNotes.length;
+                }, "0.5s").start(0);
+                Tone.Transport.start();
+            } else if (arpLoop) {
+                arpLoop.stop();
+                Tone.Transport.stop();
+            }
+        }
+
+        createKeyboard();
+
+        // Drum Sampler
+        const drumSampler = new Tone.Sampler({
+            urls: {
+                "kick": "https://tonejs.github.io/audio/drum-samples/TR-808/kick.wav",
+                "snare": "https://tonejs.github.io/audio/drum-samples/TR-808/snare.wav",
+                "hihat": "https://tonejs.github.io/audio/drum-samples/TR-808/hh.wav"
+            },
+            release: 1,
+            baseUrl: ""
+        }).toDestination();
+
+        function playDrum(type) {
+            drumSampler.triggerAttack(type);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Video Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center flex-col min-h-screen p-4">
+    <main class="w-full max-w-4xl bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col items-center">
+        <h1 class="text-3xl font-bold text-center mb-6">The Thunes - Par 3</h1>
+        <div class="flex justify-center items-center">
+            <video 
+                id="myVideo" 
+                class="w-full rounded-xl" 
+                src="par3.mp4" 
+                controls>
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    
+        <div class="mt-6 flex justify-center">
+            <button id="playButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">
+                Lets a go
+            </button>
+        </div>
+    </main>
+    <p class="mt-4 text-center">This video was produced by Pangea Productions Inc.</p>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('myVideo');
+            const playButton = document.getElementById('playButton');
+            
+            // Create a new Audio object for the click sound
+            const clickSound = new Audio('letsgo.wav');
+
+            playButton.addEventListener('click', () => {
+                // Play the sound on button click
+                clickSound.play();
+
+                // Play or pause the video
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            });
+        });
+    </script>
+
+
+</body>
+</html>

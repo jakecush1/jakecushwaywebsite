@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>808 Drum Machine & Synth</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.36/Tone.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #222; color: white; }
+        .container { margin: 20px auto; width: 80%; max-width: 900px; background: #333; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(255,255,255,0.2); }
+        .step-grid { display: grid; grid-template-columns: repeat(16, 40px); gap: 5px; justify-content: center; margin-bottom: 10px; }
+        .step { width: 40px; height: 40px; background: gray; border-radius: 5px; border: 1px solid white; cursor: pointer; }
+        .step.active { background: red; }
+        button { margin: 10px; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; background: #ff5722; color: white; cursor: pointer; }
+        button:hover { background: #e64a19; }
+        .button-on { background: green !important; }
+        .keyboard { display: flex; justify-content: center; margin-top: 20px; position: relative; }
+        .white-key { width: 50px; height: 150px; background: white; color: black; border: 1px solid black; text-align: center; line-height: 150px; cursor: pointer; position: relative; }
+        .black-key { width: 30px; height: 100px; background: black; color: white; position: absolute; z-index: 2; left: 35px; top: 0; }
+        .selected { background: yellow !important; }
+        input[type="range"] { width: 80%; max-width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>808 Drum Machine & Synth</h1>
+    <div class="container">
+        <h2>Synth</h2>
+        <div class="keyboard" id="keyboard"></div>
+    </div>
+    <script>
+        function createKeyboard() {
+            const keyboard = document.getElementById("keyboard");
+            const notes = ["C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4", "C5"];
+            const whiteNotes = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"];
+            const blackNotes = { "C4": "C#4", "D4": "D#4", "F4": "F#4", "G4": "G#4", "A4": "A#4" };
+            
+            whiteNotes.forEach((note, index) => {
+                const key = document.createElement("div");
+                key.className = "white-key";
+                key.innerText = note;
+                keyboard.appendChild(key);
+                
+                if (blackNotes[note]) {
+                    const blackKey = document.createElement("div");
+                    blackKey.className = "black-key";
+                    blackKey.innerText = blackNotes[note];
+                    key.appendChild(blackKey);
+                }
+            });
+        }
+        createKeyboard();
+    </script>
+</body>
+</html>
