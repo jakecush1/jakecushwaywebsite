@@ -12,143 +12,143 @@
     <script src="https://unpkg.com/webkul-micron@1.1.6/dist/script/micron.min.js" type="text/javascript"></script>
 	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	<script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const greetingElement = document.getElementById('greeting-header');
-		const greetings = [
-		"Hello!",     
-		"Hola!",      
-		"Bonjour!",   
-		"Ciao!",      
-		"Olá!",       
-		"Hallo!",     
-		"Здравствуйте!", 
-		"こんにちは！",
-		"안녕하세요!",
-		"你好！"
-		];
-		let index = 0;
+		document.addEventListener('DOMContentLoaded', () => {
+			const greetingElement = document.getElementById('greeting-header');
+			const greetings = [
+			"Hello!",     
+			"Hola!",      
+			"Bonjour!",   
+			"Ciao!",      
+			"Olá!",       
+			"Hallo!",     
+			"Здравствуйте!", 
+			"こんにちは！",
+			"안녕하세요!",
+			"你好！"
+			];
+			let index = 0;
 
-		// Ensure it has a transition
-		greetingElement.style.transition = "opacity 1s ease-in-out";
+			// Ensure it has a transition
+			greetingElement.style.transition = "opacity 1s ease-in-out";
 
-		function cycleGreeting() {
-		// Fade out
-		greetingElement.style.opacity = 0;
+			function cycleGreeting() {
+			// Fade out
+			greetingElement.style.opacity = 0;
 
-		setTimeout(() => {
-			// Change text while invisible
+			setTimeout(() => {
+				// Change text while invisible
+				greetingElement.textContent = greetings[index];
+				index = (index + 1) % greetings.length;
+
+				// Fade back in
+				greetingElement.style.opacity = 1;
+			}, 1000); // matches transition duration
+			}
+
+			// Start immediately
 			greetingElement.textContent = greetings[index];
 			index = (index + 1) % greetings.length;
 
-			// Fade back in
-			greetingElement.style.opacity = 1;
-		}, 1000); // matches transition duration
-		}
-
-		// Start immediately
-		greetingElement.textContent = greetings[index];
-		index = (index + 1) % greetings.length;
-
-		// Run every 3 seconds
-		setInterval(cycleGreeting, 5000);
-	});
+			// Run every 3 seconds
+			setInterval(cycleGreeting, 5000);
+		});
 	</script>
 
 	</head>
 	<body class="is-preload">
 
 		<!-- Sidebar -->
-			<section id="sidebar">
-				<div class="inner">
-					<nav>
-						<ul>
-							<li><a href="#intro">Home</a></li>
-							<!-- <li><a href="#one">About</a></li> -->
-							<li><a href="#two">Connect</a></li>
-              				<li><a href="#web-dev">Projects</a></li>
-							<!-- <li><a href="#resume">Resume</a></li> -->
-							<!-- <li><a href="#three">Store</a></li> -->
-						</ul>
-					</nav>
-				</div>
-			</section>
+		<section id="sidebar">
+			<div class="inner">
+				<nav>
+					<ul>
+						<li><a href="#intro">Home</a></li>
+						<!-- <li><a href="#one">About</a></li> -->
+						<li><a href="#two">About Me</a></li>
+						<li><a href="#web-dev">Projects</a></li>
+						<!-- <li><a href="#resume">Resume</a></li> -->
+						<li><a href="#contact">Contact</a></li>
+					</ul>
+				</nav>
+			</div>
+		</section>
 
 		<!-- Wrapper -->
-			<div id="wrapper">
-				<!-- Intro -->
-				<section data-micron="fade" id="intro" class="wrapper fullscreen fade-up style1 spotlights">
-					<section>
-						<!-- <img id="image-jake" data-micron="fade" src="photos/jake.jpg" alt="" data-position="center center"/> -->
-						<div class="content">
-							<div class="inner">
-								<h1 class ="font-bold center transition-opacity duration-500 ease-in-out" 
-								id="greeting-header">Hello,</h1> 								
-								<p data-micron="fade">My name is Jake. I am an aspiring Software Developer studying Computer Science at the University of Victoria.</p>
-								<ul class="actions">
-									<li><a href="generic.html" class="button">Download Resume</a></li>
-									<li><a href="generic.html" class="button">Contact info</a></li>
-								</ul>
-								<ul class="icons">
-									<!-- <li><a href="#"><img class="logo-img" data-micron="fade" src="photos/email.png"/></a></li> -->
-									<li><a href="https://www.linkedin.com/in/jakecushway/" class="icon brands fa-envelope"><span class="label">Resume</span></a></li>
-									<li><a href="https://www.linkedin.com/in/jakecushway/" class="icon brands fa-linkedin"><span class="label">GitHub</span></a></li>
-									<li><a href="https://github.com/jakecush1" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-								</ul>
-							</div>
-						</div>
-					</section>
-            
-				</section>
+		<div id="wrapper">
 
-				<!-- Two -->
-				<!-- <section id="two" class="wrapper style1 fullscreen fade-up"> -->
-				<section id="two" class="wrapper fullscreen style3">
-					<h1 data-micron="groove" class ="font-bold center transition-opacity duration-500 ease-in-out">About me</h1> 	
-						<div class="inner" style="padding-top: 35px;padding-bottom: 35px; display: flex; float: center; justify-content: space-evenly;">
-							<ul class="menu" id="logos" style="margin-bottom: 0px; display: flex; justify-content: space-around;">
-								<li><a href="photos/jakeCv.pdf" download><img class="logo-img" data-micron="fade" src="photos/Resume1.png"/></a></li>
-								<!-- <li><a href="#"><img class="logo-img" data-micron="fade" src="photos/email.png"/></a></li> -->
-								<li><a href="https://www.linkedin.com/in/jakecushway/"><img class="logo-img" data-micron="fade" src="photos/linkedIn.png"/></a></li>
-								<li><a href="https://github.com/jakecush1"><img class="logo-img" data-micron="fade" src="photos/git.png"/></a></li>
+			<!-- Intro -->
+			<section data-micron="fade" id="intro" class="wrapper fullscreen fade-up style1 spotlights">
+				<section>
+					<!-- <img id="image-jake" data-micron="fade" src="photos/jake.jpg" alt="" data-position="center center"/> -->
+					<div class="content">
+						<div class="inner">
+							<h1 class ="font-bold center transition-opacity duration-500 ease-in-out" 
+							id="greeting-header">Hello,</h1> 								
+							<p data-micron="fade">My name is Jake. I am an aspiring Software Developer studying Computer Science at the University of Victoria.</p>
+							<ul class="actions">
+								<li><a href="files/JakeCushwayResume.pdf" download class="button">Download Resume</a></li>
+								<li><a href="#contact" class="button">Contact info</a></li>
 							</ul>
-						</div>
-
-					<div class="inner">
-						<div data-micron="bounce" class="features">
-							
-							<section>
-								<span data-micron="tada"class="icon solid major fa-code"></span>
-								<h3 data-micron="groove">Tech Services</h3>
-								<p data-micron="swing" > 
-										<ul>
-											<a href="#projects" class="scrolly"><li>Web Development</li></a>
-											<a href="#projects" class="scrolly"><li>Web Hosting</li></a>
-											<a href="#projects" class="scrolly"><li>Software Development</li></a>
-										</ul>
-									</a>
-
-								</p>
-							</section>
-											
-							<section>
-								<span id="trigger" data-micron="squeeze"class="icon solid major fa-code"></span>
-								<h3 id="trigger" data-micron="flicker">Projects</h3>
-								<p id="trigger" data-micron="jerk">
-									<a href="demo.html" class="scrolly">
-										<ul>
-											<li>Lets a go</li>	
-										</ul>
-									</a>
-								</p>
-
-							</section>
-
+							<ul class="icons">
+								<!-- <li><a href="#"><img class="logo-img" data-micron="fade" src="photos/email.png"/></a></li> -->
+								<li><a href="demoMedia.html" class="icon fa-heart"><span class="label">Media</span></a></li>
+								<li><a href="https://github.com/jakecush1" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+								<li><a href="https://www.linkedin.com/in/jakecushway/" class="icon brands fa-linkedin"><span class="label">GitHub</span></a></li>
+							</ul>
 						</div>
 					</div>
 				</section>
+		
+			</section>
+			
 
-        	<!-- Projects -->
-        	<!-- <section id="projects" class="wrapper style2-alt fade-up fullscreen">
+			<!-- Two -->
+			<!-- <section id="two" class="wrapper style1 fullscreen fade-up"> -->
+			<section id="two" class="wrapper fullscreen style3">
+				<div class="inner" style="display:flex; flex-direction: column; justify-content: space-between;">
+
+					<div>
+						<div style="display: flex; flex-direction: column; align-items: center;" >
+							<p style="margin-bottom: 0px;">Get to know more</p>
+							<h2 data-micron="fade">About Me</h2>
+						</div>
+							<p style="margin-bottom: 20px data-micron="fade">I am a Full Stack Web Developer based out of Victoria, British Columbia, Canada. I have experience with a variety of programming languages and technologies including HTML, CSS, PHP, Nodejs, Reactjs, Javascript, server management, website security, and database design. I am passionate about creating beautiful and functional websites that provide an excellent user experience. I am always looking to learn new skills and technologies to improve my craft.</p>
+					</div>
+
+					<div data-micron="bounce" class="features" style="margin: 20px 0 0 0">
+
+						<section>
+							<span id="trigger" data-micron="squeeze"class="icon solid major fa-code"></span>
+							<h3 id="trigger" data-micron="flicker">Experience</h3>
+							<p id="trigger" data-micron="jerk">
+								<a href="demo.html" class="scrolly">
+									<ul>
+										<a><li>Selkirk Innovates</li></a>
+										<li>12 Month Internship</li>	
+										<li>Full Stack Web Development</li>	
+									</ul>
+								</a>
+							</p>
+						</section>
+
+						<section>
+							<span data-micron="tada"class="icon solid major fa-code"></span>
+							<h3 data-micron="groove">Education</h3>
+							<p data-micron="swing" > 
+									<ul>
+										<a href="#projects" class="scrolly"><li>Web Development</li></a>
+										<a href="#projects" class="scrolly"><li>Web Hosting</li></a>
+										<a href="#projects" class="scrolly"><li>Software Development</li></a>
+									</ul>
+							</p>
+						</section>
+
+					</div>
+				</div>
+			</section>
+
+			<!-- Projects -->
+			<!-- <section id="projects" class="wrapper style2-alt fade-up fullscreen">
 				<h2 data-micron="fade" id="projects-header">Javascript</h2>
 				<section class="projects">
 				<ul class="project-showcase">
@@ -320,53 +320,45 @@
 									
 				</ul>
 				
-
 			</section>
 
-			</section>
-        
-			<!-- 
-			<section id="three" class="wrapper fullscreen fade-up style1">
+		
+
+			<section id="contact" class="wrapper fullscreen fade-up style1">
 				<div class="inner" style="padding-top: 35px;padding-bottom: 35px;">
-					<h1>
-						<a href="#projects" class="scrolly">Store Coming Soon</a>
-					</h1>
-	
 
-						<section>
-							<form action="mailto:jcushyay@hotmail.com" method="post" nctype="text/plain">
+					<section>
+						<form action="mailto:jcushyay@hotmail.com" method="post" nctype="text/plain">
 
-								<div class="fields">
-									<div class="field half">
-										<label for="name">Name</label>
-										<input type="text" name="name" id="name" />
-									</div>
-									<div class="field half">
-										<label for="email">Email</label>
-										<input type="text" name="email" id="email" />
-									</div>
-									<div class="field">
-										<label for="message">Message</label>
-										<textarea name="message" id="message" rows="5"></textarea>
-									</div>
+							<div class="fields">
+								<div class="field half">
+									<label for="name">Name</label>
+									<input type="text" name="name" id="name" />
 								</div>
-								<ul class="actions">
-									<input type="submit" name="submit" value="Submit">
-									<li><a href="#" class="button">Send Message</a></li>
-								</ul>
-							</form>
-						</section> 
+								<div class="field half">
+									<label for="email">Email</label>
+									<input type="text" name="email" id="email" />
+								</div>
+								<div class="field">
+									<label for="message">Message</label>
+									<textarea name="message" id="message" rows="5"></textarea>
+								</div>
+							</div>
+							<ul class="actions">
+								<input type="submit" name="submit" value="Submit">
+								<li><a href="#" class="button">Send Message</a></li>
+							</ul>
+						</form>
+					</section> 
 
 				</div>
 
-			</section> -->
+			</section> 
 
 		</div>
 
-
 		<footer id="footer" class="wrapper style1">
 			<div class="inner" style="padding-top: 35px;padding-bottom: 35px;">
-				
 				<ul class="menu" style="margin-bottom: 0px;">
 					<li style="border-right:solid;padding-right: 20px;">Links  </li>
 					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="https://postalpizzas.ca/">Postal Pizza</a></li>
@@ -377,10 +369,9 @@
 					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="						https://lighterbro.com/contact">Lighter Bro</a></li>
 					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="						https://online-ceramics.com/">Online Ceramics</a></li>
 				</ul>	
-
 			</div>
-		</footer>
 
+		</footer>
 		<!-- Scripts -->
 		<script src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/jquery.scrollex.min.js"></script>
