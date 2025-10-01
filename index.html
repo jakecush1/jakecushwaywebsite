@@ -11,73 +11,6 @@
 		<link href="https://unpkg.com/webkul-micron@1.1.6/dist/css/micron.min.css" type="text/css" rel="stylesheet">
 		<script src="https://unpkg.com/webkul-micron@1.1.6/dist/script/micron.min.js" type="text/javascript"></script>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-		<script>
-			document.addEventListener('DOMContentLoaded', () => {
-				const greetingElement = document.getElementById('greeting-header');
-				const greetings = [
-				"Hello!",     
-				"Hola!",      
-				"Bonjour!",   
-				"Ciao!",      
-				"Olá!",       
-				"Hallo!",     
-				"Здравствуйте!", 
-				"こんにちは！",
-				"안녕하세요!",
-				"你好！"
-				];
-				let index = 0;
-
-				// Ensure it has a transition
-				greetingElement.style.transition = "opacity 1s ease-in-out";
-
-				function cycleGreeting() {
-				// Fade out
-				greetingElement.style.opacity = 0;
-
-				setTimeout(() => {
-					// Change text while invisible
-					greetingElement.textContent = greetings[index];
-					index = (index + 1) % greetings.length;
-
-					// Fade back in
-					greetingElement.style.opacity = 1;
-				}, 1000); // matches transition duration
-				}
-
-				// Start immediately
-				greetingElement.textContent = greetings[index];
-				index = (index + 1) % greetings.length;
-
-				// Run every 3 seconds
-				setInterval(cycleGreeting, 5000);
-			});
-		</script>
-		<script>
-			let slideIndex = 1;
-
-			function plusSlide(n) {
-			showSlides(slideIndex += n);
-			}
-
-			function showSlides(n) {
-			let slides = document.getElementsByClassName("slide");
-			if (n > slides.length) { slideIndex = 1; }
-			if (n < 1) { slideIndex = slides.length; }
-			for (let i = 0; i < slides.length; i++) {
-				slides[i].style.display = "none";
-			}
-			slides[slideIndex - 1].style.display = "block";
-			}
-
-			function prevSlide() { plusSlide(-1); }
-			function nextSlide() { plusSlide(1); }
-
-			/* ✅ Run on page load */
-			window.onload = function() {
-			showSlides(slideIndex);
-			};
-		</script>
 	</head>
 	<body class="is-preload">
 		<!-- Sidebar -->
@@ -167,107 +100,189 @@
 			</section>
 
 			<section id="projects" class="fade-up wrapper fullscreen" style="background-color: #312450;">
-				<div class="inner" style="display: flex; justify-content: space-around; flex-direction: column; align-items: center;">
-					<h2 data-micron="fade" id="projects-header">Projects</h2>
-					<div class="slideshow-container">
-						<div class="slide">
-							<div style="display:flex; justify-content: center">
-								<img class="side-photo" data-micron="flicker" src="photos/sinixthome.png" alt="Autonomous Sinixt">
-							</div>
-							<div style="display:flex; padding-top: 25px; flex-direction:row; justify-content: space-evenly">
-								<button data-micron="bounce" class="button"><a href="projects.html">Link</a></button>
-								<button data-micron="bounce" class="button"><a href="projects.html">Info</a></button>
-							</div>
-						</div>
-						<div class="slide">
-							<div style="display:flex; justify-content: center">
-								<img class="side-photo" data-micron="flicker" src="photos/sotb.png" alt="State Of The Basin">
-							</div>
-							<div style="display:flex; padding-top: 25px; flex-direction:row; justify-content: space-evenly">
-								<button data-micron="bounce" class="button"><a href="projects.html">Link</a></button>
-								<button data-micron="bounce" class="button"><a href="projects.html">Info</a></button>
-							</div>
-						</div>
-						<div class="slide">
-							<div style="display:flex; justify-content: center">
-								<img class="side-photo" data-micron="flicker" src="photos/bsc.png" alt="Basin Climate Source">
-							</div>
-							<div style="display:flex; padding-top: 25px; flex-direction:row; justify-content: space-evenly">
-								<button data-micron="bounce" class="button"><a href="projects.html">Link</a></button>
-								<button data-micron="bounce" class="button"><a href="projects.html">Info</a></button>
-							</div>
-						</div>
-						<!-- Navigation buttons -->
-						<a class="prev" onclick="prevSlide()">&#10094;</a>
-						<a class="next" onclick="nextSlide()">&#10095;</a>
+			<div class="inner" style="display: flex; justify-content: space-around; flex-direction: column; align-items: center;">
+				<h2 data-micron="fade" id="projects-header">Projects</h2>
+				<div class="slideshow-container">
+
+				<div class="slide">
+					<div style="display:flex; flex-direction: column; justify-content: center;">
+					<div class="image-overlay-container">
+						<img class="side-photo" data-micron="flicker" src="photos/sinixthome.png" alt="Autonomous Sinixt">
+						<div class="overlay-text">Custom Website</div>
 					</div>
-					<div>
-						<br>
-						<button data-micron="bounce" class="button"><a href="projects.html">See more</a></button>
+					</div>
+					<div style="display:flex; padding-top: 25px; flex-direction:row; justify-content: space-evenly">
+					<button data-micron="bounce" class="button"><a href="https://sinixt.org/" target="_blank">Link</a></button>
+					<button data-micron="bounce" class="button"><a href="projects.html">Info</a></button>
 					</div>
 				</div>
+
+				<div class="slide">
+					<div style="display:flex; flex-direction: column; justify-content: center;">
+					<div class="image-overlay-container">
+						<img class="side-photo" data-micron="flicker" src="photos/sotb.png" alt="State Of The Basin">
+						<div class="overlay-text">State Of The Basin</div>
+					</div>
+					</div>
+					<div style="display:flex; padding-top: 25px; flex-direction:row; justify-content: space-evenly">
+					<button data-micron="bounce" class="button"><a href="https://stateofthebasin.ca/community-profiles" target="_blank">Link</a></button>
+					<button data-micron="bounce" class="button"><a href="projects.html">Info</a></button>
+					</div>
+				</div>
+
+				<div class="slide">
+					<div style="display:flex; flex-direction: column; justify-content: center;">
+					<div class="image-overlay-container">
+						<img class="side-photo" data-micron="flicker" src="photos/bsc.png" alt="Basin Climate Source">
+						<div class="overlay-text">Basin Climate Source</div>
+					</div>
+					</div>
+					<div style="display:flex; padding-top: 25px; flex-direction:row; justify-content: space-evenly">
+					<button data-micron="bounce" class="button"><a href="https://basinclimatesource.ca/climate-projections" target="_blank">Link</a></button>
+					<button data-micron="bounce" class="button"><a href="projects.html">Info</a></button>
+					</div>
+				</div>
+
+				<div class="slide">
+					<div style="display:flex; flex-direction: column; justify-content: center;">
+					<div class="image-overlay-container">
+						<img class="side-photo" data-micron="flicker" src="photos/qrCode.png" alt="QR code generator">
+						<div class="overlay-text">QR Code Generator</div>
+					</div>
+					</div>
+					<div style="display:flex; padding-top: 25px; flex-direction:row; justify-content: space-evenly">
+					<a href="pages/QR-generator.html"><button data-micron="bounce" class="button">Demo</button></a>
+					<button data-micron="bounce" class="button"><a href="projects.html">Info</a></button>
+					</div>
+				</div>
+
+				<div class="slide">
+					<div style="display:flex; flex-direction: column; justify-content: center;">
+					<div class="image-overlay-container">
+						<img class="side-photo" data-micron="flicker" src="photos/medical.png" alt="Python contacts app">
+						<div class="overlay-text">Python Contacts App</div>
+					</div>
+					</div>
+					<div style="display:flex; padding-top: 25px; flex-direction:row; justify-content: space-evenly">
+					<button data-micron="bounce" class="button"><a href="projects/noteapp.html" target="_blank">Demo</a></button>
+					<button data-micron="bounce" class="button"><a href="projects/noteAppOrig.html" target="_blank">Demo</a></button>
+					<button data-micron="bounce" class="button"><a href="projects/votingchallenge.html" target="_blank">Demo</a></button>
+					</div>
+				</div>
+
+				<div class="slide">
+					<div style="display:flex; flex-direction: column; justify-content: center;">
+					<div class="image-overlay-container">
+						<img class="side-photo" data-micron="flicker" src="photos/808.png" alt="Music player">
+						<div class="overlay-text">808 Music Player</div>
+					</div>
+					</div>
+					<div style="display:flex; padding-top: 25px; flex-direction:row; justify-content: space-evenly">
+					<button data-micron="bounce" class="button"><a href="pages/808-real.html" target="_blank">Demo</a></button>
+					<button data-micron="bounce" class="button"><a href="projects.html">Info</a></button>
+					</div>
+				</div>
+
+				<!-- Navigation buttons -->
+				<a class="prev" onclick="prevSlide()">&#10094;</a>
+				<a class="next" onclick="nextSlide()">&#10095;</a>
+
+				</div>
+				<div>
+				<br>
+				<button data-micron="bounce" class="button"><a href="projects.html">See more</a></button>
+				</div>
+			</div>
 			</section>
+
+
 			<style>
 				/* Container */
 				.slideshow-container {
+					position: relative;
+					max-width: 666px;
+					height:60vh;
+					margin: auto;
+					overflow: hidden;
+					border-radius: 12px;
+					box-shadow: none; /* ← no shadow */
+				}
+
+				.image-overlay-container {
 				position: relative;
-				max-width: 70vw;
-				height:60vh;
-				margin: auto;
-				overflow: hidden;
+				display: inline-block; /* ensures it sizes to the image */
+				}
+
+				.image-overlay-container img {
+				display: block;        /* avoids bottom whitespace */
+				width: auto;
+				height: 35vh;
 				border-radius: 12px;
-  				box-shadow: none; /* ← no shadow */
+				margin: 0 auto;        /* works with display:block to keep it centered if needed */
+				}
+
+				.overlay-text {
+				position: absolute;
+				bottom: 5px;             /* keep it a little above the bottom */
+				left: 50%;                /* move to the horizontal center */
+				transform: translateX(-50%); /* shift back by half its width */
+				background: rgba(0, 0, 0, 0.5);
+				color: white;
+				padding: 5px 10px;
+				font-size: 1rem;
+				border-radius: 5px;
+				pointer-events: none;
+				text-align: center;
+				white-space: nowrap;      /* keep text on one line */
 				}
 
 				/* Slides */
 				.slide {
-				display: none;
+					display: none;
 				}
 
 				.slide img {
-				width: auto;        
-				height: 35vh;
-				border-radius: 12px;
+					width: auto;        
+					height: 35vh;
+					border-radius: 12px;
 				}
 
 				/* Navigation buttons */
 				.prev, .next {
-				cursor: pointer;
-				position: absolute;
-				top: 50%;
-				width: auto;
-				padding: 12px;
-				margin-top: -22px;
-				color: white;
-				font-weight: bold;
-				font-size: 24px;
-				border-radius: 50%;
-				background-color: rgba(0,0,0,0.5);
-				user-select: none;
-				transition: background 0.3s;
+					cursor: pointer;
+					position: absolute;
+					top: 50%;
+					width: auto;
+					padding: 12px;
+					margin-top: -22px;
+					color: white;
+					font-weight: bold;
+					font-size: 24px;
+					border-radius: 50%;
+					background-color: rgba(0,0,0,0.5);
+					user-select: none;
+					transition: background 0.3s;
 				}
 
 				.prev:hover, .next:hover {
-				background-color: rgba(0,0,0,0.8);
+					background-color: rgba(0,0,0,0.8);
 				}
 
 				/* Positioning */
 				.prev {
-				left: 10px;
+					left: 10px;
 				}
 
 				.next {
-				right: 10px;
+					right: 10px;
 				}
 			</style>
 
 			<!-- Contact -->
-			<section id="contact" class="wrapper fullscreen fade-up style1">
+			<section id="contact" style="display:flex; justify-content: center;" class="wrapper fullscreen fade-up style1">
 				<div class="inner">
-
 					<section>
-
-						<form action="mailto:jcushyay@hotmail.com" method="post" nctype="text/plain">
+						<form action="https://formspree.io/f/mwprojze" method="post" nctype="text/plain">
 							<div class="fields">
 								<div class="field half">
 									<label for="name">Name</label>
@@ -275,16 +290,17 @@
 								</div>
 								<div class="field half">
 									<label for="email">Email</label>
-									<input type="text" name="email" id="email" />
+									<input type="email" name="email" id="email" />
 								</div>
 								<div class="field">
 									<label for="message">Message</label>
 									<textarea name="message" id="message" rows="5"></textarea>
 								</div>
 							</div>
+							<!-- Google reCAPTCHA widget -->
+							<div class="g-recaptcha" data-sitekey="6LekbdorAAAAAAS5s87qfeJjKmbr1MXUqF8wxn4F"></div>
 							<ul class="actions">
 								<input type="submit" name="submit" value="Submit">
-								<li><a href="#" class="button">Send Message</a></li>
 							</ul>
 						</form>
 					</section> 
@@ -295,22 +311,19 @@
 
 		</div>
 
-		<footer id="footer" class="wrapper style1">
+		<!-- <footer id="footer" class="wrapper style1">
 			<div class="inner">
 				<ul class="menu" style="margin-bottom: 0px;">
 					<li style="border-right:solid;padding-right: 20px;">Links  </li>
-					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="https://postalpizzas.ca/">Postal Pizza</a></li>
-					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="https://www.lynxogt.com/">Lynx OGT</a></li>
 					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="https://9teenten.com/en-ca">1910</a></li>
-					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="https://dashboard.cubbi.app/">Cubbi</a></li>
 					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="https://lookingforloot.bigcartel.com/contact">LOOT</a></li>
-					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="						https://lighterbro.com/contact">Lighter Bro</a></li>
-					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="						https://online-ceramics.com/">Online Ceramics</a></li>
+					<li id="footer-links" style="border-left:none;"><a style="border-bottom:none"href="https://online-ceramics.com/">Online Ceramics</a></li>
 				</ul>	
 			</div>
 
-		</footer>
+		</footer> -->
 		<!-- Scripts -->
+		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 		<script src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/jquery.scrollex.min.js"></script>
 		<script src="assets/js/jquery.scrolly.min.js"></script>
@@ -318,6 +331,72 @@
 		<script src="assets/js/breakpoints.min.js"></script>
 		<script src="assets/js/util.js"></script>
 		<script src="assets/js/main.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const greetingElement = document.getElementById('greeting-header');
+				const greetings = [
+				"Hello!",     
+				"Hola!",      
+				"Bonjour!",   
+				"Ciao!",      
+				"Olá!",       
+				"Hallo!",     
+				"Здравствуйте!", 
+				"こんにちは！",
+				"안녕하세요!",
+				"你好！"
+				];
+				let index = 0;
 
+				// Ensure it has a transition
+				greetingElement.style.transition = "opacity 1s ease-in-out";
+
+				function cycleGreeting() {
+				// Fade out
+				greetingElement.style.opacity = 0;
+
+				setTimeout(() => {
+					// Change text while invisible
+					greetingElement.textContent = greetings[index];
+					index = (index + 1) % greetings.length;
+
+					// Fade back in
+					greetingElement.style.opacity = 1;
+				}, 1000); // matches transition duration
+				}
+
+				// Start immediately
+				greetingElement.textContent = greetings[index];
+				index = (index + 1) % greetings.length;
+
+				// Run every 3 seconds
+				setInterval(cycleGreeting, 5000);
+			});
+		</script>
+		<script>
+			let slideIndex = 1;
+
+			function plusSlide(n) {
+			showSlides(slideIndex += n);
+			}
+
+			function showSlides(n) {
+			let slides = document.getElementsByClassName("slide");
+			if (n > slides.length) { slideIndex = 1; }
+			if (n < 1) { slideIndex = slides.length; }
+			for (let i = 0; i < slides.length; i++) {
+				slides[i].style.display = "none";
+			}
+			slides[slideIndex - 1].style.display = "block";
+			}
+
+			function prevSlide() { plusSlide(-1); }
+			function nextSlide() { plusSlide(1); }
+
+			/* ✅ Run on page load */
+			window.onload = function() {
+			showSlides(slideIndex);
+			};
+		</script>
 	</body>
 </html>
