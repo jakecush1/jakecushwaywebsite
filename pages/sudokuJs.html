@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Interactive Sudoku (vanilla JS)</title>
+<style>
+  :root{
+    --cell-size: 56px;
+    --gap: 6px;
+    --accent: #2b6ef6;
+    --bg: #f7f9fc;
+    --cell-bg: #fff;
+    --fixed-color: #111;
+    --user-color: #0b6;
+    --wrong-color: #e03e3e;
+    --pencil-size: 12px;
+  }
+  body{
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,#e9f2ff 0%, #f7fafc 100%);
+    display:flex; align-items:center; justify-content:center;
+    min-height:100vh; margin:0; padding:20px;
+  }
+  .app {
+    max-width: 980px;
+    width: 100%;
+    display:grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+    align-items:start;
+  }
+
+  .panel {
+    background:white; border-radius:12px; padding:18px;
+    box-shadow: 0 6px 20px rgba(18,30,80,0.08);
+  }
+
+  .board {
+    display:grid;
+    grid-template-columns: repeat(9, var(--cell-size));
+    grid-template-rows: repeat(9, var(--cell-size));
+    gap: calc(var(--gap) - 2px);
+    padding: 10px;
+    background: var(--bg);
+    border-radius: 10px;
+    justify-content: center;
+  }
+
+  .cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    box-sizing: border-box;
+    background: var(--cell-bg);
+    border: 1px solid rgba(17,24,39,0.06);
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    font-size: 22px;
+    font-weight: 600;
+    color: #0b0b0b;
+    border-radius:6px;
+  }
+  /* thicker borders for 3x3 boxes */
+  .cell:nth-child(9n+1){ } /* placeholder */
+  /* we add thicker borders via inline style building for clarity in JS */
+
+  .cell.fixed { color: var(--fixed-color); font-weight:700; }
+  .cell.user { color: var(--user-color); }
+  .cell.wrong { background: rgba(224,62,62,0.06); animation: shake .12s linear 1; }
+  @keyframes shake { 0%{transform:translateX(-2px)}50%{transform:translateX(2px)}100%{transform:none} }
+
+  .cell.selected { outline: 3px solid rgba(43,110,246,0.12); box-shadow: 0 4px 14px rgba(43,110,246,0.08) inset; }
+  .cell.highlight { background: rgba(43,110,246,0.04); }
+
+  .value {
+    z-index:2;
+  }
+
+  .pencil {
+    position:absolute;
+    inset:6px;
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap:2px;
+    font-size: var(--pencil-size);
+    color: #666;
+    align-items: center;
+    justify-items: center;
+    opacity:0.95;
+    pointer-events: none;
+  }
+  .pencil span { font-weight: 600; opacity: 0.9; }
+  .controls { display:flex; flex-direction:column; gap:12px; }
+  .top-row { display:flex; gap:8px; align-items:center; justify-content:space-between; }
+  .title { font-weight:700; font-size:18px; color:#0b1220; }
+  select, button { font-size:14px; padding:8px 10px; border-radius:8px; border:1px solid rgba(15,23,42,0.08); background:white; cursor:pointer; }
+  .btn-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .number-pad { display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; }
+  .num-btn { font-weight:700; padding:10px 12px; border-radius:8px; border:1px solid rgba(15,23,42,0.06); background:white; cursor:pointer; font-size:16px; }
+  .pencil-toggle { display:inline-flex; gap:8px; align-items:center; }
+  .small { font-size:12px; color:#556; }
+
+  .meta { font-size:12px; color:#475569; display:flex; gap:12px; align-items:center; }
+  .status { margin-top:6px; color:#2b6ef6; font-weight:600; }
+
+  /* responsive */
+  @media (max-width:920px){
+    .app { grid-template-columns: 1fr; }
+    .controls { order:2; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="panel" id="leftPanel">
+    <div class="board" id="board" aria-label="Sudoku board"></div>
+  </div>
+
+  <div class="panel controls" id="controls">
+    <div class="top-row">
+      <div>
+        <div class="title">Interactive Sudoku</div>
+        <div class="small">Click a cell → type 1–9. Toggle pencil mode for notes.</div>
+      </div>
+      <div>
+        <label class="small">Difficulty</label><br>
+        <select id="difficulty">
+          <option value="36">Easy</option>
+          <option value="32" selected>Medium</option>
+          <option value="28">Hard</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button id="newBtn">New Puzzle</button>
+      <button id="hintBtn">Hint</button>
+      <button id="solveBtn">Solve</button>
+      <button id="checkBtn">Check</button>
+      <button id="clearBtn">Clear Notes</button>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px;align-items:center;">
+      <label class="pencil-toggle"><input type="checkbox" id="pencilMode"> <span class="small">Pencil (notes)</span></label>
+      <div class="meta">
+        <div>Selected: <span id="selPos">—</span></div>
+        <div class="status" id="status"></div>
+      </div>
+    </div>
+
+    <hr style="margin:10px 0; border:none; border-top:1px solid #efefef;" />
+
+    <div>
+      <div style="margin-bottom:6px;">Number pad</div>
+      <div class="number-pad" id="pad">
+        <!-- buttons 1..9 -->
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button id="eraseBtn">Erase (Del)</button>
+        <button id="undoBtn" disabled>Undo</button>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;font-size:12px;color:#475569">
+      <strong>Notes:</strong> Unique-solution enforcement may slow puzzle generation on the hardest settings. If a new puzzle takes a few seconds, that's normal.
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Utilities & Sudoku engine ---------- */
+function emptyGrid(){
+  return Array.from({length:9},()=>Array(9).fill(0));
+}
+function cloneGrid(g){ return g.map(r=>r.slice()); }
+
+function inBlock(r,c, rr, cc){
+  return Math.floor(r/3)===Math.floor(rr/3) && Math.floor(c/3)===Math.floor(cc/3);
+}
+
+function isValid(grid, r, c, val){
+  if(val===0) return true;
+  for(let i=0;i<9;i++){
+    if(grid[r][i]===val) return false;
+    if(grid[i][c]===val) return false;
+  }
+  const br = 3*Math.floor(r/3), bc = 3*Math.floor(c/3);
+  for(let i=br;i<br+3;i++) for(let j=bc;j<bc+3;j++) if(grid[i][j]===val) return false;
+  return true;
+}
+
+/* get candidates for a cell */
+function candidates(grid, r, c){
+  if(grid[r][c]!==0) return [];
+  const used = new Set();
+  for(let i=0;i<9;i++){ used.add(grid[r][i]); used.add(grid[i][c]); }
+  const br = 3*Math.floor(r/3), bc = 3*Math.floor(c/3);
+  for(let i=br;i<br+3;i++) for(let j=bc;j<bc+3;j++) used.add(grid[i][j]);
+  const res = [];
+  for(let v=1;v<=9;v++) if(!used.has(v)) res.push(v);
+  return res;
+}
+
+/* Fast backtracking solver with MRV heuristic */
+function solveBacktrack(grid){
+  // find empty with fewest candidates
+  let best = null, bestLen = 10;
+  for(let r=0;r<9;r++){
+    for(let c=0;c<9;c++){
+      if(grid[r][c]===0){
+        const cand = candidates(grid,r,c);
+        if(cand.length===0) return false;
+        if(cand.length < bestLen){ bestLen=cand.length; best=[r,c,cand]; }
+      }
+    }
+  }
+  if(best===null) return true; // filled
+  const [r,c,cand] = best;
+  // try values in random order for variety
+  for(let v of shuffleArray(cand.slice())){
+    grid[r][c]=v;
+    if(solveBacktrack(grid)) return true;
+    grid[r][c]=0;
+  }
+  return false;
+}
+
+/* count solutions up to `limit` (stop early if reaching limit) */
+function countSolutions(grid, limit=2){
+  let count = 0;
+  function dfs(g){
+    if(count>=limit) return;
+    // find empty cell with MRV
+    let best = null, bestLen = 10;
+    for(let r=0;r<9;r++){
+      for(let c=0;c<9;c++){
+        if(g[r][c]===0){
+          const cand = candidates(g,r,c);
+          if(cand.length===0) return;
+          if(cand.length < bestLen){ bestLen=cand.length; best=[r,c,cand]; }
+        }
+      }
+    }
+    if(best===null){ count++; return; }
+    const [r,c,cand] = best;
+    for(let v of cand){
+      g[r][c]=v;
+      dfs(g);
+      g[r][c]=0;
+      if(count>=limit) return;
+    }
+  }
+  dfs(cloneGrid(grid));
+  return count;
+}
+
+/* shuffle helper */
+function shuffleArray(a){
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+/* generate a full solved grid (randomized) */
+function generateFull(){
+  const g = emptyGrid();
+  solveBacktrack(g);
+  return g;
+}
+
+/* generate puzzle with `clues` filled; ensureUnique toggles uniqueness enforcement */
+function generatePuzzle(clues=32, ensureUnique=true){
+  const solution = generateFull();
+  const puzzle = cloneGrid(solution);
+  const cells = Array.from({length:81},(_,i)=>i);
+  shuffleArray(cells);
+  const targetRemovals = 81 - Math.max(17, Math.min(81, clues)); // >=17 clues to be solvable in general
+  let removed = 0;
+  for(let idx of cells){
+    if(removed>=targetRemovals) break;
+    const r = Math.floor(idx/9), c = idx%9;
+    const backup = puzzle[r][c];
+    puzzle[r][c] = 0;
+    if(ensureUnique){
+      // test uniqueness (stop at 2)
+      const sols = countSolutions(puzzle, 2);
+      if(sols !== 1){
+        puzzle[r][c] = backup; // restore
+      } else {
+        removed++;
+      }
+    } else {
+      removed++;
+    }
+  }
+  return { puzzle, solution };
+}
+
+/* ---------- UI & interaction ---------- */
+const boardEl = document.getElementById('board');
+const difficultySel = document.getElementById('difficulty');
+const newBtn = document.getElementById('newBtn');
+const hintBtn = document.getElementById('hintBtn');
+const solveBtn = document.getElementById('solveBtn');
+const checkBtn = document.getElementById('checkBtn');
+const clearBtn = document.getElementById('clearBtn');
+const pad = document.getElementById('pad');
+const pencilModeCB = document.getElementById('pencilMode');
+const selPos = document.getElementById('selPos');
+const status = document.getElementById('status');
+
+let cellEls = []; // 2D array of cell DOM nodes
+let fixed = emptyGrid();  // initial puzzle numbers (non-zero fixed)
+let user = emptyGrid();   // user entries (0 or 1-9)
+let pencils = Array.from({length:9},()=>Array.from({length:9},()=>new Set()));
+let solution = emptyGrid();
+let selected = null; // [r,c]
+let ensureUnique = true;
+
+function buildBoard(){
+  boardEl.innerHTML = '';
+  cellEls = Array.from({length:9},()=>Array(9).fill(null));
+  for(let r=0;r<9;r++){
+    for(let c=0;c<9;c++){
+      const div = document.createElement('div');
+      div.className = 'cell';
+      div.dataset.r=r; div.dataset.c=c;
+      // style thicker borders for box separators
+      const style = [];
+      if(c%3===0) style.push('border-left:2px solid rgba(15,23,42,0.08)');
+      if((c+1)%3===0) style.push('border-right:2px solid rgba(15,23,42,0.08)');
+      if(r%3===0) style.push('border-top:2px solid rgba(15,23,42,0.08)');
+      if((r+1)%3===0) style.push('border-bottom:2px solid rgba(15,23,42,0.08)');
+      div.style.cssText += style.join(';');
+      div.innerHTML = '<div class="value"></div><div class="pencil"></div>';
+      div.addEventListener('click', ()=> selectCell(r,c));
+      boardEl.appendChild(div);
+      cellEls[r][c] = div;
+    }
+  }
+}
+
+/* render the entire grid state into DOM */
+function render(){
+  for(let r=0;r<9;r++){
+    for(let c=0;c<9;c++){
+      const el = cellEls[r][c];
+      const valEl = el.querySelector('.value');
+      const pencilEl = el.querySelector('.pencil');
+      el.classList.remove('fixed','user','wrong','selected','highlight');
+      // value precedence: fixed > user
+      if(fixed[r][c]!==0){
+        el.classList.add('fixed');
+        valEl.textContent = fixed[r][c];
+        pencilEl.style.display = 'none';
+      } else if(user[r][c]!==0){
+        el.classList.add('user');
+        valEl.textContent = user[r][c];
+        pencilEl.style.display = 'none';
+        // mark wrong if mismatches solution (only when user entered)
+        if(solution[r][c] && user[r][c] !== solution[r][c]) el.classList.add('wrong');
+      } else {
+        valEl.textContent = '';
+        pencilEl.style.display = 'grid';
+        // render pencil marks grid 1..9
+        pencilEl.innerHTML = '';
+        for(let v=1;v<=9;v++){
+          const span = document.createElement('span');
+          span.textContent = pencils[r][c].has(v) ? v : '';
+          pencilEl.appendChild(span);
+        }
+      }
+    }
+  }
+  updateSelectionHighlight();
+}
+
+/* selection & highlighting */
+function selectCell(r,c){
+  if(selected && selected[0]===r && selected[1]===c) return;
+  selected = [r,c];
+  selPos.textContent = `${r+1},${c+1}`;
+  render();
+}
+
+function updateSelectionHighlight(){
+  if(!selected) return;
+  const [sr,sc] = selected;
+  for(let r=0;r<9;r++){
+    for(let c=0;c<9;c++){
+      const el = cellEls[r][c];
+      el.classList.toggle('selected', r===sr && c===sc);
+      el.classList.toggle('highlight', r===sr || c===sc || inBlock(sr,sc,r,c));
+    }
+  }
+}
+
+/* place number (user action), or pencil toggle */
+function placeNumber(v){
+  if(!selected) return;
+  const [r,c] = selected;
+  if(fixed[r][c]!==0) return;
+  if(pencilModeCB.checked){
+    // toggle pencil note for v
+    if(user[r][c]!==0) return; // don't allow pencils if a main value exists
+    if(pencils[r][c].has(v)) pencils[r][c].delete(v); else pencils[r][c].add(v);
+    render();
+    return;
+  }
+  // set main value
+  user[r][c] = v;
+  pencils[r][c].clear();
+  render();
+}
+
+/* erase value/pencils at selected */
+function eraseCell(){
+  if(!selected) return;
+  const [r,c] = selected;
+  if(fixed[r][c]!==0) return;
+  user[r][c]=0;
+  pencils[r][c].clear();
+  render();
+}
+
+/* hint: fill selected with correct solution */
+function hint(){
+  if(!selected) return;
+  const [r,c] = selected;
+  if(fixed[r][c]!==0) return;
+  user[r][c] = solution[r][c];
+  pencils[r][c].clear();
+  render();
+}
+
+/* check current user board against solution */
+function checkSolution(){
+  for(let r=0;r<9;r++){
+    for(let c=0;c<9;c++){
+      if(fixed[r][c]===0){
+        // empty treated as wrong
+        if(user[r][c]===0 || user[r][c] !== solution[r][c]){
+          status.textContent = 'Not correct yet — keep trying';
+          status.style.color = '#e03e3e';
+          // highlight wrong ones briefly
+          if(user[r][c]===0){
+            cellEls[r][c].classList.add('wrong');
+          } else {
+            cellEls[r][c].classList.add('wrong');
+          }
+          return;
+        }
+      }
+    }
+  }
+  status.textContent = 'Solved! 🎉';
+  status.style.color = '#0b6';
+}
+
+/* solve: fill everything */
+function fillSolution(){
+  for(let r=0;r<9;r++){
+    for(let c=0;c<9;c++){
+      if(fixed[r][c]===0) user[r][c]=solution[r][c];
+    }
+  }
+  render();
+  status.textContent = 'Solution filled';
+  status.style.color = '#2b6ef6';
+}
+
+/* create a new puzzle and render; keeps UI responsive with small timeout */
+function newPuzzle(){
+  status.textContent = 'Generating puzzle…';
+  status.style.color = '#2b6ef6';
+  // read difficulty clues
+  const clues = parseInt(difficultySel.value,10);
+  // we call generator asynchronously so browser can show status
+  setTimeout(()=>{
+    const {puzzle, solution: sol} = generatePuzzle(clues, ensureUnique);
+    fixed = cloneGrid(puzzle);
+    solution = cloneGrid(sol);
+    user = emptyGrid();
+    pencils = Array.from({length:9},()=>Array.from({length:9},()=>new Set()));
+    selected = null;
+    buildBoard();
+    render();
+    status.textContent = 'Puzzle ready — good luck!';
+    status.style.color = '#2b6ef6';
+  }, 30);
+}
+
+/* keyboard navigation & input */
+document.addEventListener('keydown', (ev)=>{
+  if(!selected) return;
+  const [r,c] = selected;
+  if(ev.key >= '1' && ev.key <= '9'){
+    const v = parseInt(ev.key,10);
+    placeNumber(v);
+    ev.preventDefault();
+    return;
+  }
+  if(ev.key === 'Backspace' || ev.key === 'Delete'){
+    eraseCell();
+    ev.preventDefault();
+    return;
+  }
+  if(ev.key === 'ArrowUp'){ selectCell(Math.max(0,r-1), c); ev.preventDefault(); return; }
+  if(ev.key === 'ArrowDown'){ selectCell(Math.min(8,r+1), c); ev.preventDefault(); return; }
+  if(ev.key === 'ArrowLeft'){ selectCell(r, Math.max(0,c-1)); ev.preventDefault(); return; }
+  if(ev.key === 'ArrowRight'){ selectCell(r, Math.min(8,c+1)); ev.preventDefault(); return; }
+  if(ev.key === ' '){ pencilModeCB.checked = !pencilModeCB.checked; ev.preventDefault(); return; }
+});
+
+/* number pad buttons */
+for(let v=1; v<=9; v++){
+  const btn = document.createElement('button');
+  btn.className='num-btn';
+  btn.textContent = v;
+  btn.addEventListener('click', ()=> placeNumber(v));
+  pad.appendChild(btn);
+}
+
+/* attach control buttons */
+newBtn.addEventListener('click', ()=> newPuzzle());
+hintBtn.addEventListener('click', ()=> hint());
+solveBtn.addEventListener('click', ()=> fillSolution());
+checkBtn.addEventListener('click', ()=> checkSolution());
+clearBtn.addEventListener('click', ()=>{
+  // clear all pencil notes
+  pencils.forEach((row)=>row.forEach(set=>set.clear()));
+  render();
+});
+
+document.getElementById('eraseBtn').addEventListener('click', ()=> eraseCell());
+
+/* initialize */
+buildBoard();
+newPuzzle();
+
+</script>
+</body>
+</html>
